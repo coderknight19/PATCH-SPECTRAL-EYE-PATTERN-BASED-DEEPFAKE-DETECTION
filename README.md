@@ -1,2 +1,5 @@
-# PATCH-SPECTRAL-EYE-PATTERN-BASED-DEEPFAKE-DETECTION
-A deepfake detection model that analyzes facial patches, frequency-domain artefacts, and eye-movement patterns to spot manipulation. It identifies texture inconsistencies, spectral distortions, and unnatural blinks to reliably distinguish real and fake faces.
+# PSEP Deepfake Detection
+
+Repository starter with images and structure. Update code folders as needed.
+
+![Architecture](images/f43f1879-a901-476b-9419-245fea2e2ba3.png)

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Deep Fake Video Detection</title>
+    <style>
+        /* General Styles */
+        body {
+            background: linear-gradient(to bottom right, #1a1a1a, #000000);
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: white;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        form {
+            text-align: center;
+            animation: slideIn 1s ease-in-out;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .button {
+            display: inline-block;
+            margin: 10px;
+            padding: 12px 24px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        #upload_button {
+            background-color: #008CBA;
+        }
+
+        #upload_button:hover {
+            background-color: #0077a3;
+        }
+
+        #classify_button {
+            background-color: #f44336;
+        }
+
+        #classify_button:hover {
+            background-color: #e53935;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            max-width: 400px;
+            background-color: #333;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+            display: none; /* Hidden by default */
+        }
+
+        .progress-bar {
+            width: 0;
+            height: 10px;
+            background-color: #4CAF50;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        /* Results Section */
+        #result1, #result2 {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 1.2rem;
+            opacity: 0;
+            animation: fadeIn 1s ease-in-out forwards;
+        }
+
+        /* Frame Display */
+        #frame-display {
+            margin-top: 20px;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 1s ease-in-out forwards;
+        }
+
+        #frame-display img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes progressAnimation {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Deep Fake Video Detection</h1>
+    <h3>Upload Video</h3>
+
+    <form action="/classify" method="post" enctype="multipart/form-data">
+        <input type="file" id="video" name="video" accept="video/*">
+        <br><br>
+        <input type="button" value="Choose File" id="upload_button" class="button">
+        <br><br>
+        <input type="submit" value="Classify" id="classify_button" class="button">
+    </form>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar"></div>
+    </div>
+
+    <!-- Results -->
+    <h3 id="result1">Deep Fake Video: {{ result1 }}</h3>
+    <h3 id="result2">Deep Fake Audio: {{ result2 }}</h3>
+
+    <!-- Frame Display -->
+    {% if frame_path %}
+    <div id="frame-display">
+        <h3>Extracted Frame</h3>
+        <img src="{{ url_for('static', filename='images/' + frame_path) }}" alt="Extracted Frame">
+    </div>
+    {% endif %}
+
+    <script>
+        const uploadButton = document.getElementById("upload_button");
+        const fileInput = document.getElementById("video");
+        const classifyButton = document.getElementById("classify_button");
+        const progressContainer = document.querySelector(".progress-container");
+        const progressBar = document.querySelector(".progress-bar");
+        const result1 = document.getElementById("result1");
+        const result2 = document.getElementById("result2");
+
+        // Trigger file input when "Choose File" button is clicked
+        uploadButton.addEventListener("click", function () {
+            fileInput.click();
+        });
+
+        // Show progress bar and simulate progress when "Classify" button is clicked
+        classifyButton.addEventListener("click", function () {
+            // Show progress bar
+            progressContainer.style.display = "block";
+            progressBar.style.width = "0";
+
+            // Simulate progress animation
+            setTimeout(() => {
+                progressBar.style.width = "100%";
+            }, 100);
+
+            // Show results after a delay (simulating processing time)
+            setTimeout(() => {
+                result1.style.opacity = "1";
+                result2.style.opacity = "1";
+                if (document.getElementById("frame-display")) {
+                    document.getElementById("frame-display").style.opacity = "1";
+                }
+            }, 3000); // 3-second delay
+        });
+
+        // Show selected file name
+        fileInput.addEventListener("change", function () {
+            if (fileInput.files.length > 0) {
+                uploadButton.textContent = fileInput.files[0].name;
+            }
+        });
+    </script>
+</body>
+</html> 
